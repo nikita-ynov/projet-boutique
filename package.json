@@ -1,0 +1,25 @@
+{
+  "name": "projet-boutique",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "supervisor app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikita-ynov/projet-boutique.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nikita-ynov/projet-boutique/issues"
+  },
+  "homepage": "https://github.com/nikita-ynov/projet-boutique#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "supervisor": "^0.12.0"
+  }
+}
