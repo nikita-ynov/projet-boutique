@@ -10,7 +10,7 @@ app.use(cors({
     origin: true
 }))
 
-const sneakerRouter = require("./router/plush")
+const sneakerRouter = require("./router/products")
 app.use(sneakerRouter)
 
 app.listen(PORT, () =>
