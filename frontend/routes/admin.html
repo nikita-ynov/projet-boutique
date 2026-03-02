@@ -1,0 +1,75 @@
+<!-- filepath: /Users/malek/Desktop/projet-boutique/frontend/routes/admin.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZAZA — Administration</title>
+
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-bar">
+            <nav class="nav-links" aria-label="Navigation principale">
+<a href="../index.html">Accueil</a>          <!-- remonte d'un dossier -->
+<a href="./admin.html">Gérer le site</a>      <!-- même dossier -->
+<a href="./connexion.html">Me connecter</a>   <!-- même dossier -->
+            </nav>
+
+            <a href="../index.html" class="brand" aria-label="ZAZA - Accueil">
+                <img src="../img/logo.png" class="brand-logo" alt="" aria-hidden="true">
+            </a>
+
+            <div class="header-actions">
+                <button class="btn ghost" aria-label="Quitter l'administration">← Retour</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <h2>Panneau d'Administration</h2>
+        </div>
+    </section>
+
+    <!-- ADMIN PANEL -->
+    <main class="container">
+
+        <div class="admin-panel">
+            <div class="admin-card">
+                <h3>📦 Produits</h3>
+                <p>Gérez votre catalogue de produits</p>
+                <div class="admin-actions">
+                    <button class="btn">+ Ajouter un produit</button>
+                    <button class="btn ghost">Gérer les produits</button>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <h3>👥 Utilisateurs</h3>
+                <p>Gérez les utilisateurs et permissions</p>
+                <div class="admin-actions">
+                    <button class="btn ghost">Gérer les utilisateurs</button>
+                </div>
+            </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 ZAZA — Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="../script/app.js"></script>
+
+</body>
+</html>
