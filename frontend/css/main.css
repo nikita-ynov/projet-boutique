@@ -1,0 +1,296 @@
+/* =========================
+   RESET & BASE
+========================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #f7f9fc;
+  color: #1f2937;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.page-title {
+  margin: 40px 0 20px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.site-header {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  gap: 20px;
+}
+
+/* Marque (logo + texte ZAZA) */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.brand-text {
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #111827;
+}
+
+/* Navigation & actions */
+.nav-links {
+  display: flex;
+  gap: 16px;
+}
+
+.nav-links a {
+  color: #374151;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: #111827;
+  text-decoration: underline;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.searchbar {
+  display: flex;
+  flex: 1;
+  max-width: 400px;
+}
+
+.searchbar input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px 0 0 8px;
+  outline: none;
+}
+
+.searchbar button {
+  padding: 10px 15px;
+  border: none;
+  background: #111827;
+  color: white;
+  border-radius: 0 8px 8px 0;
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* =========================
+   FILTERS
+========================= */
+
+.filters {
+  background: #f1f5f9;
+  border-top: 1px solid #e5e7eb;
+}
+
+.filters-bar {
+  display: flex;
+  gap: 20px;
+  padding: 15px 0;
+  flex-wrap: wrap;
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 5px;
+}
+
+.filters select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+/* =========================
+   BOUTONS
+========================= */
+
+.btn {
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn:hover {
+  background: #2563eb;
+}
+
+.btn.ghost {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #111827;
+}
+
+.btn.ghost:hover {
+  background: #e5e7eb;
+}
+
+/* =========================
+   GRID PRODUITS
+========================= */
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+  margin-bottom: 60px;
+}
+
+/* =========================
+   CARTE PRODUIT
+========================= */
+
+.product-card {
+  background: white;
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+
+.product-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.img-2 {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-media:hover .img-2 {
+  opacity: 1;
+}
+
+.product-title {
+  margin: 15px 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.product-price {
+  margin-bottom: 15px;
+}
+
+.price-old {
+  text-decoration: line-through;
+  color: #9ca3af;
+  margin-right: 8px;
+}
+
+.price-now {
+  font-weight: 600;
+  color: #dc2626;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #dc2626;
+  color: white;
+  padding: 5px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.product-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* =========================
+ FOOTER
+========================= */
+
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .header-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-links {
+    justify-content: center;
+  }
+
+  .searchbar {
+    max-width: 100%;
+  }
+}
