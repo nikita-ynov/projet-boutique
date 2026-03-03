@@ -1,6 +1,5 @@
 const db = require('../config/db');
 
-
 // =========================
 // GET ALL PRODUCTS
 // =========================
@@ -158,6 +157,66 @@ exports.getSimiliarProducts = async (req, res) => {
   }
 };
 
+// =========================
+// ADD PRODUCT (ADMIN)
+// =========================
+exports.addProduct = async (req, res) => {
+  const {
+    reference, name, description, price, discount, 
+    currency, stock, gender, type, colors, sizes, images
+  } = req.body;
+
+  const connection = await db.getConnection();
+
+  try {
+    await connection.beginTransaction();
+
+    // 1. Insert into products table
+    const [result] = await connection.query(
+      `INSERT INTO products (reference, name, description, price, discount, currency, stock, gender, type) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [reference, name, description, price, discount, currency, stock, gender, type]
+    );
+
+    const productId = result.insertId;
+
+    // 2. Insert colors
+    if (colors && Array.isArray(colors)) {
+      for (let color of colors) {
+        await connection.query(`INSERT INTO product_colors (product_id, color) VALUES (?, ?)`, [productId, color]);
+      }
+    }
+
+    // 3. Insert sizes
+    if (sizes && Array.isArray(sizes)) {
+      for (let size of sizes) {
+        await connection.query(`INSERT INTO product_sizes (product_id, size) VALUES (?, ?)`, [productId, size]);
+      }
+    }
+
+    // 4. Insert images
+    if (images && Array.isArray(images)) {
+      for (let i = 0; i < images.length; i++) {
+        await connection.query(
+          `INSERT INTO product_images (product_id, image_url, is_main) VALUES (?, ?, ?)`,
+          [productId, images[i], i === 0]
+        );
+      }
+    }
+
+    await connection.commit();
+    connection.release();
+
+    res.status(201).json({ message: "Produit ajouté avec succès ! ✅", productId });
+
+  } catch (error) {
+    if (connection) {
+      await connection.rollback();
+      connection.release();
+    }
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // =========================
 // EDIT PRODUCT (ADMIN)
@@ -238,6 +297,8 @@ exports.editProduct = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 
 // =========================

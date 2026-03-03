@@ -1,12 +1,16 @@
 const express = require("express");
-const { addFavorites } = require("../controller/favorites");
-const { getFavorites } = require("../controller/favorites");
-const { deleteFavorites } = require("../controller/favorites");
+const { addFavorites, getFavorites, deleteFavorites } = require("../controllers/favorites");
+const authMiddleware = require("../middleware/auth");
+
 const router = express.Router();
 
-router.post("/favorites", addFavorites);
-router.get("/favorites/:productId", getFavorites);
-router.delete("/favorites/:productId", deleteFavorites);
+// добавить в избранное
+router.post("/favorites/:productId", authMiddleware, addFavorites);
 
+// получить все избранные пользователя
+router.get("/favorites", authMiddleware, getFavorites);
 
-module.exports = router
+// удалить из избранного
+router.delete("/favorites/:productId", authMiddleware, deleteFavorites);
+
+module.exports = router;

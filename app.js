@@ -8,14 +8,15 @@ const PORT = process.env.PORT;
 
 
 app.use(cors({
-    origin: true
+    origin: true 
 }))
 
 const productsRouter = require("./router/products")
 const favoritesRouter = require("./router/favorites")
 const cartRouter = require("./router/cart")
 const authRouter = require("./router/auth")
-app.use(productsRouter, favoritesRouter, cartRouter, authRouter)
+
+app.use(productsRouter)
 
 app.get('/test-db', async (req, res) => {
   try {
