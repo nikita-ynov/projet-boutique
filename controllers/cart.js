@@ -1,9 +1,7 @@
 const db = require('../config/db');
 
 
-// ===============================
 // Helper: Get or Create Cart
-// ===============================
 const getOrCreateCart = async (userId) => {
   const [carts] = await db.query(
     "SELECT * FROM carts WHERE user_id = ?",
@@ -24,9 +22,7 @@ const getOrCreateCart = async (userId) => {
 
 
 
-// ===============================
 // VIEW CART
-// ===============================
 exports.viewCart = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -52,9 +48,7 @@ exports.viewCart = async (req, res) => {
 
 
 
-// ===============================
 // ADD PRODUCT TO CART
-// ===============================
 exports.addProduct = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -105,9 +99,7 @@ exports.addProduct = async (req, res) => {
 
 
 
-// ===============================
 // EDIT CART ITEM QUANTITY
-// ===============================
 exports.editCart = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -133,9 +125,7 @@ exports.editCart = async (req, res) => {
 
 
 
-// ===============================
 // DELETE ONE PRODUCT
-// ===============================
 exports.deleteProduct = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -157,9 +147,7 @@ exports.deleteProduct = async (req, res) => {
 
 
 
-// ===============================
 // DELETE ALL CART
-// ===============================
 exports.deleteAll = async (req, res) => {
   try {
     const userId = req.user.id;

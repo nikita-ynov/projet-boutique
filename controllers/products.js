@@ -1,8 +1,6 @@
 const db = require('../config/db');
 
-// =========================
 // GET ALL PRODUCTS
-// =========================
 exports.getProducts = async (req, res) => {
   try {
     const {
@@ -80,9 +78,7 @@ exports.getProducts = async (req, res) => {
 };
 
 
-// =========================
 // GET PRODUCT BY ID
-// =========================
 exports.getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -125,9 +121,7 @@ exports.getProductById = async (req, res) => {
 };
 
 
-// =========================
 // SIMILAR PRODUCTS
-// =========================
 exports.getSimiliarProducts = async (req, res) => {
   try {
     const { id } = req.params;
@@ -157,9 +151,7 @@ exports.getSimiliarProducts = async (req, res) => {
   }
 };
 
-// =========================
 // ADD PRODUCT (ADMIN)
-// =========================
 exports.addProduct = async (req, res) => {
   const {
     reference, name, description, price, discount, 
@@ -218,9 +210,7 @@ exports.addProduct = async (req, res) => {
   }
 };
 
-// =========================
 // EDIT PRODUCT (ADMIN)
-// =========================
 exports.editProduct = async (req, res) => {
   const { id } = req.params;
   const {
@@ -301,9 +291,7 @@ exports.editProduct = async (req, res) => {
 
 
 
-// =========================
 // DELETE PRODUCT (ADMIN)
-// =========================
 exports.deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;

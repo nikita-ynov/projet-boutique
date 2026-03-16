@@ -1,15 +1,12 @@
 const db = require('../config/db');
 
 
-// =======================
 // ADD FAVORITE
-// =======================
 exports.addFavorites = async (req, res) => {
   try {
     const userId = req.user.id;
     const { productId } = req.params;
 
-    // Проверка существует ли товар
     const [product] = await db.query(
       "SELECT id FROM products WHERE id = ?",
       [productId]
@@ -19,7 +16,6 @@ exports.addFavorites = async (req, res) => {
       return res.status(404).json({ message: "Produit introuvable" });
     }
 
-    // Проверка уже есть в избранном
     const [existing] = await db.query(
       "SELECT id FROM favorites WHERE user_id = ? AND product_id = ?",
       [userId, productId]
@@ -43,9 +39,7 @@ exports.addFavorites = async (req, res) => {
 
 
 
-// =======================
 // GET USER FAVORITES
-// =======================
 exports.getFavorites = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -69,9 +63,7 @@ exports.getFavorites = async (req, res) => {
 
 
 
-// =======================
 // DELETE FAVORITE
-// =======================
 exports.deleteFavorites = async (req, res) => {
   try {
     const userId = req.user.id;

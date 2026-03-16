@@ -3,9 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-// ======================
 // REGISTER
-// ======================
 exports.registerUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -50,9 +48,7 @@ exports.registerUser = async (req, res) => {
 };
 
 
-// ======================
 // LOGIN
-// ======================
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -91,9 +87,7 @@ exports.loginUser = async (req, res) => {
 };
 
 
-// ======================
 // GET PROFILE
-// ======================
 exports.userProfile = async (req, res) => {
   try {
     const [users] = await db.query(
