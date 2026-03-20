@@ -4,27 +4,254 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZAZA STORE</title>
+  <title>ZAZA STORE – Peluches Premium</title>
+  <meta name="description" content="Découvrez nos peluches premium, douces et fabriquées avec amour. Livraison rapide partout en Europe.">
 
   <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/home.css" />
 </head>
 
 <body>
-  <header>
-    <img src="" alt="">
-    <ul>
-      <li>
-        
-      </li>
-    </ul>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a href="./index.html" class="logo">
+        <div class="logo-mark">Z</div>
+        <span class="logo-text">ZAZA</span>
+      </a>
+
+      <div class="header-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search" placeholder="Rechercher une peluche…" autocomplete="off">
+      </div>
+
+      <nav class="header-nav">
+        <a href="./index.html" class="nav-link active">Accueil</a>
+        <a href="./collections.html" class="nav-link">Collections</a>
+        <a href="#" class="nav-link">Nouveautés</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" title="Favoris">
+          🤍
+        </button>
+        <a href="#" class="icon-btn" title="Panier">
+          🛒
+          <span class="cart-count" style="display:none">0</span>
+        </a>
+        <button class="btn-login">Se connecter</button>
+      </div>
+
+      <button class="mobile-toggle">☰</button>
+    </div>
   </header>
+
+  <!-- ==================== HERO ==================== -->
   <main>
+    <div class="container">
+      <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
 
+        <div class="hero-content">
+          <div class="hero-tag">✨ Collection Printemps 2026</div>
+          <h1>Trouvez votre <em>peluche</em> idéale</h1>
+          <p class="hero-desc">
+            Des peluches douces, mignonnes et fabriquées avec amour.
+            Livraison gratuite en France dès 40€ d'achat.
+          </p>
+          <div class="hero-actions">
+            <a href="./collections.html" class="btn">
+              🧸 Explorer la boutique
+            </a>
+            <a href="#new-arrivals" class="btn btn-outline">
+              Nouveautés
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-num">2k+</span>
+            <span class="stat-label">Clients satisfaits</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">50+</span>
+            <span class="stat-label">Modèles</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">4.9</span>
+            <span class="stat-label">Note moyenne</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== CATEGORIES ==================== -->
+    <section class="categories container">
+      <div class="section-header">
+        <h2 class="section-title">Nos <span>catégories</span></h2>
+        <a href="./collections.html" class="see-all">Tout voir →</a>
+      </div>
+
+      <div class="category-grid">
+        <a href="./collections.html?type=bear" class="category-card">
+          <img src="https://images.unsplash.com/photo-1559181567-c3190ca9d222?w=600&q=80" alt="Ours">
+          <div class="category-label">
+            <h3>Ours</h3>
+            <span>12 modèles</span>
+          </div>
+        </a>
+
+        <a href="./collections.html?type=cat" class="category-card">
+          <img src="https://images.unsplash.com/photo-1462332420958-a05d1e002413?w=600&q=80" alt="Chats">
+          <div class="category-label">
+            <h3>Chats</h3>
+            <span>8 modèles</span>
+          </div>
+        </a>
+
+        <a href="./collections.html?type=rabbit" class="category-card">
+          <img src="https://images.unsplash.com/photo-1585399000684-d2f72660f092?w=600&q=80" alt="Lapins">
+          <div class="category-label">
+            <h3>Lapins</h3>
+            <span>6 modèles</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ==================== FEATURES BAND ==================== -->
+    <section class="container">
+      <div class="features-band">
+        <div class="feature-item">
+          <div class="feature-icon">🚚</div>
+          <div class="feature-text">
+            <h4>Livraison rapide</h4>
+            <p>Expédition sous 24h, livraison gratuite dès 40€</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💎</div>
+          <div class="feature-text">
+            <h4>Qualité Premium</h4>
+            <p>Matériaux certifiés, doux et résistants</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">❤️</div>
+          <div class="feature-text">
+            <h4>Fait avec amour</h4>
+            <p>Chaque peluche est inspectée à la main</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== NEW ARRIVALS ==================== -->
+    <section class="new-arrivals container" id="new-arrivals">
+      <div class="section-header">
+        <h2 class="section-title">Nouveaux <span>arrivages</span></h2>
+        <a href="./collections.html" class="see-all">Tout voir →</a>
+      </div>
+
+      <div class="products" id="products-home">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== ABOUT BANNER ==================== -->
+    <section class="about-banner container">
+      <div class="about-image"></div>
+      <div class="about-content">
+        <span class="badge">🌿 Notre histoire</span>
+        <h2>Pourquoi choisir ZAZA ?</h2>
+        <p>
+          Chez ZAZA, chaque peluche est pensée pour durer. Nous sélectionnons
+          rigoureusement nos matières pour offrir confort et sécurité.
+          Nos créations sont conçues en France, fabriquées de manière responsable.
+        </p>
+        <ul class="about-list">
+          <li>Matériaux hypoallergéniques certifiés</li>
+          <li>Conformes aux normes CE jouets</li>
+          <li>Emballage 100% recyclable</li>
+          <li>Satisfait ou remboursé 30 jours</li>
+        </ul>
+        <a href="./collections.html" class="btn">Découvrir nos peluches</a>
+      </div>
+    </section>
+
+    <!-- ==================== CTA ==================== -->
+    <section class="cta-section container">
+      <h2>Prêt à trouver votre peluche ?</h2>
+      <p>Des centaines de modèles vous attendent. Livraison gratuite dès 40€.</p>
+      <a href="./collections.html" class="btn">Explorer la collection 🧸</a>
+    </section>
   </main>
-  <footer>
 
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">
+            <div class="logo-mark">Z</div>
+            <span class="logo-text">ZAZA</span>
+          </div>
+          <p>Des peluches premium, douces et fabriquées avec amour. Livraison rapide partout en Europe.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-link">📷</a>
+            <a href="#" class="social-link">🎵</a>
+            <a href="#" class="social-link">🐦</a>
+            <a href="#" class="social-link">▶️</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Boutique</h5>
+          <a href="./collections.html">Collections</a>
+          <a href="./collections.html?sort=new">Nouveautés</a>
+          <a href="./collections.html?sort=rating">Meilleures ventes</a>
+          <a href="#">Promotions</a>
+        </div>
+
+        <div class="footer-col">
+          <h5>Aide</h5>
+          <a href="#">Contact</a>
+          <a href="#">Livraison & retours</a>
+          <a href="#">FAQ</a>
+          <a href="#">Suivi commande</a>
+        </div>
+
+        <div class="footer-col">
+          <h5>Informations</h5>
+          <a href="#">À propos</a>
+          <a href="#">Mentions légales</a>
+          <a href="#">Confidentialité</a>
+          <a href="#">CGV</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 ZAZA STORE. Tous droits réservés.</span>
+        <span>Fait avec ❤️ en France</span>
+      </div>
+    </div>
   </footer>
-</body>
-<script src="./js/script.js"></script>
 
+  <script src="./js/script.js"></script>
+  <script>
+    // Render featured products on homepage
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("products-home");
+      const featured = PRODUCTS.slice(0, 4);
+      container.innerHTML = featured.map(renderProductCard).join("");
+      attachCardEvents(container);
+    });
+  </script>
+
+</body>
 </html>
