@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — Boutique Peluche</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f11;
+            --surface: #18181c;
+            --surface2: #22222a;
+            --border: #2a2a35;
+            --accent: #7c6aff;
+            --accent2: #ff6a8a;
+            --green: #3ecf8e;
+            --yellow: #f9c74f;
+            --red: #ff6a6a;
+            --text: #e8e8f0;
+            --muted: #7a7a90;
+            --font: 'DM Sans', sans-serif;
+            --mono: 'DM Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            min-width: 220px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .sidebar-logo {
+            padding: 22px 20px 18px;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: .5px;
+            color: var(--text);
+        }
+
+        .sidebar-logo span {
+            color: var(--accent);
+        }
+
+        .sidebar-logo small {
+            display: block;
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .nav {
+            flex: 1;
+            padding: 12px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13.5px;
+            color: var(--muted);
+            transition: all .15s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .nav-item .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 14px 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .api-badge {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--muted);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            word-break: break-all;
+        }
+
+        .api-badge input {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 11px;
+            width: 100%;
+            outline: none;
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge.green {
+            background: rgba(62, 207, 142, .15);
+            color: var(--green);
+        }
+
+        .badge.red {
+            background: rgba(255, 106, 106, .15);
+            color: var(--red);
+        }
+
+        .badge.dot::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            display: block;
+        }
+
+        /* CONTENT */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        /* PAGES */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* CARDS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 20px;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-card .value {
+            font-size: 26px;
+            font-weight: 600;
+            font-family: var(--mono);
+        }
+
+        .stat-card .sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* TABLE */
+        .table-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .table-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            padding: 11px 16px;
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        td {
+            padding: 12px 16px;
+            font-size: 13.5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--surface2);
+        }
+
+        .loading-row td {
+            color: var(--muted);
+            text-align: center;
+            padding: 32px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 500;
+            transition: all .15s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            opacity: .85;
+        }
+
+        .btn-danger {
+            background: rgba(255, 106, 106, .15);
+            color: var(--red);
+            border: 1px solid rgba(255, 106, 106, .3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 106, 106, .25);
+        }
+
+        .btn-ghost {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .btn-ghost:hover {
+            background: var(--border);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            width: 560px;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* FORM */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        input,
+        select,
+        textarea {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 13.5px;
+            padding: 9px 12px;
+            outline: none;
+            transition: border .15s;
+            width: 100%;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        select option {
+            background: var(--surface2);
+        }
+
+        /* SEARCH */
+        .search-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .search-row input {
+            max-width: 280px;
+        }
+
+        /* TOAST */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 999;
+        }
+
+        .toast {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-size: 13.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn .2s ease;
+            min-width: 220px;
+        }
+
+        .toast.success {
+            border-color: var(--green);
+        }
+
+        .toast.error {
+            border-color: var(--red);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* AUTH SCREEN */
+        .auth-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .auth-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+            width: 380px;
+        }
+
+        .auth-box h1 {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .auth-box p {
+            color: var(--muted);
+            font-size: 13.5px;
+            margin-bottom: 24px;
+        }
+
+        .auth-box .form-group {
+            margin-bottom: 14px;
+        }
+
+        .auth-box .btn {
+            width: 100%;
+            justify-content: center;
+            padding: 11px;
+            margin-top: 8px;
+        }
+
+        /* CHIPS */
+        .chip {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            margin: 2px;
+        }
+
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        /* COLOR DOT */
+        .color-dot {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, .1);
+            vertical-align: middle;
+            margin: 1px;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        /* SPINNER */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, .2);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin .6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- AUTH SCREEN -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-box">
+            <h1>🧸 Admin Panel</h1>
+            <p>Connexion à l'espace administrateur</p>
+            <div class="form-group">
+                <label>URL de l'API</label>
+                <input type="text" id="apiUrlInput" value="http://localhost:3000" placeholder="http://localhost:3000">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="admin@boutique.fr">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="loginPassword" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" onclick="doLogin()">Se connecter</button>
+            <div id="loginError" style="color:var(--red);font-size:13px;margin-top:10px;display:none;"></div>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            🧸 <span>Boutique</span><br>
+            <small>Admin Panel</small>
+        </div>
+        <nav class="nav">
+            <button class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard">
+                <span class="icon">📊</span> Dashboard
+            </button>
+            <button class="nav-item" onclick="showPage('products')" id="nav-products">
+                <span class="icon">📦</span> Produits
+            </button>
+            <button class="nav-item" onclick="showPage('users')" id="nav-users">
+                <span class="icon">👥</span> Utilisateurs
+            </button>
+            <button class="nav-item" onclick="showPage('orders')" id="nav-orders">
+                <span class="icon">🛍️</span> Commandes
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="api-badge">
+                <input type="text" id="apiUrlDisplay" readonly>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px;justify-content:center;"
+                onclick="logout()">
+                Déconnexion
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="topbar">
+            <div class="topbar-title" id="pageTitle">Dashboard</div>
+            <div class="topbar-actions">
+                <div class="badge green dot" id="statusBadge">API connectée</div>
+                <span id="userEmail" style="font-size:13px;color:var(--muted);"></span>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- DASHBOARD -->
+            <div class="page active" id="page-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="label">Produits</div>
+                        <div class="value" id="stat-products">—</div>
+                        <div class="sub">dans le catalogue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Utilisateurs</div>
+                        <div class="value" id="stat-users">—</div>
+                        <div class="sub">inscrits</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">En promotion</div>
+                        <div class="value" id="stat-promo">—</div>
+                        <div class="sub">produits avec discount</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Stock faible</div>
+                        <div class="value" id="stat-lowstock" style="color:var(--yellow)">—</div>
+                        <div class="sub">produits ≤ 5 unités</div>
+                    </div>
+                </div>
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Derniers produits ajoutés</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Nom</th>
+                                <th>Prix</th>
+                                <th>Stock</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-recent"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PRODUCTS -->
+            <div class="page" id="page-products">
+                <div class="search-row">
+                    <input type="text" id="productSearch" placeholder="🔍 Rechercher un produit..."
+                        oninput="filterProducts()">
+                    <button class="btn btn-primary" onclick="openAddProduct()">+ Ajouter</button>
+                </div>
+                <div class="table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Réf</th>
+                                <th>Nom</th>
+                                <th>Prix</th>
+                                <th>Discount</th>
+                                <th>Stock</th>
+                                <th>Genre</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- USERS -->
+            <div class="page" id="page-users">
+                <div class="search-row">
+                    <input type="text" id="userSearch" placeholder="🔍 Rechercher un utilisateur..."
+                        oninput="filterUsers()">
+                </div>
+                <div class="table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Email</th>
+                                <th>Rôle</th>
+                                <th>Inscrit le</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ORDERS -->
+            <div class="page" id="page-orders">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Commandes</h3><span style="font-size:13px;color:var(--muted)">Table orders depuis votre
+                            BDD</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Total</th>
+                                <th>Statut</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL ADD/EDIT PRODUCT -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <h2 id="modalTitle">Ajouter un produit</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Référence *</label>
+                    <input type="text" id="f-reference" placeholder="PLU-001">
+                </div>
+                <div class="form-group">
+                    <label>Nom *</label>
+                    <input type="text" id="f-name" placeholder="Peluche Lapin">
+                </div>
+                <div class="form-group full">
+                    <label>Description *</label>
+                    <textarea id="f-description" placeholder="Description du produit..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Prix (€) *</label>
+                    <input type="number" id="f-price" placeholder="29.99" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Discount (%)</label>
+                    <input type="number" id="f-discount" placeholder="0" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label>Stock *</label>
+                    <input type="number" id="f-stock" placeholder="50">
+                </div>
+                <div class="form-group">
+                    <label>Devise</label>
+                    <input type="text" id="f-currency" value="EUR" placeholder="EUR">
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    <select id="f-gender">
+                        <option value="">-- Aucun --</option>
+                        <option value="homme">Homme</option>
+                        <option value="femme">Femme</option>
+                        <option value="enfant">Enfant</option>
+                        <option value="unisex">Unisex</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <input type="text" id="f-type" placeholder="peluche, ours, lapin...">
+                </div>
+                <div class="form-group full">
+                    <label>Couleurs (séparées par virgule)</label>
+                    <input type="text" id="f-colors" placeholder="rose, bleu, blanc">
+                </div>
+                <div class="form-group full">
+                    <label>Tailles (séparées par virgule)</label>
+                    <input type="text" id="f-sizes" placeholder="S, M, L, XL">
+                </div>
+                <div class="form-group full">
+                    <label>URLs des images (séparées par virgule)</label>
+                    <textarea id="f-images" placeholder="https://..., https://..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+                <button class="btn btn-primary" onclick="submitProduct()" id="submitBtn">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        let API_URL = 'http://localhost:3000';
+        let TOKEN = '';
+        let editingProductId = null;
+        let allProducts = [];
+        let allUsers = [];
+
+        // ── AUTH ──────────────────────────────────────────────
+        async function doLogin() {
+            API_URL = document.getElementById('apiUrlInput').value.trim().replace(/\/$/, '');
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errEl = document.getElementById('loginError');
+            errEl.style.display = 'none';
+
+            try {
+                const res = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Erreur');
+                TOKEN = data.token;
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('apiUrlDisplay').value = API_URL;
+                document.getElementById('userEmail').textContent = email;
+                loadDashboard();
+            } catch (e) {
+                errEl.textContent = e.message;
+                errEl.style.display = 'block';
+            }
+        }
+
+        document.getElementById('loginPassword').addEventListener('keydown', e => {
+            if (e.key === 'Enter') doLogin();
+        });
+
+        function logout() {
+            TOKEN = '';
+            document.getElementById('authScreen').style.display = 'flex';
+        }
+
+        // ── API HELPER ─────────────────────────────────────────
+        async function api(path, method = 'GET', body = null) {
+            const opts = {
+                method,
+                headers: { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json' }
+            };
+            if (body) opts.body = JSON.stringify(body);
+            const res = await fetch(`${API_URL}${path}`, opts);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || data.error || 'Erreur');
+            return data;
+        }
+
+        // ── NAVIGATION ─────────────────────────────────────────
+        function showPage(name) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + name).classList.add('active');
+            document.getElementById('nav-' + name).classList.add('active');
+            const titles = { dashboard: 'Dashboard', products: 'Produits', users: 'Utilisateurs', orders: 'Commandes' };
+            document.getElementById('pageTitle').textContent = titles[name];
+            if (name === 'dashboard') loadDashboard();
+            if (name === 'products') loadProducts();
+            if (name === 'users') loadUsers();
+            if (name === 'orders') loadOrders();
+        }
+
+        // ── DASHBOARD ──────────────────────────────────────────
+        async function loadDashboard() {
+            try {
+                const products = await api('/products');
+                allProducts = products;
+                document.getElementById('stat-products').textContent = products.length;
+                const promo = products.filter(p => p.discount > 0).length;
+                document.getElementById('stat-promo').textContent = promo;
+                const low = products.filter(p => p.stock <= 5).length;
+                document.getElementById('stat-lowstock').textContent = low;
+
+                const recent = [...products].slice(-5).reverse();
+                const tbody = document.getElementById('dashboard-recent');
+                tbody.innerHTML = recent.map(p => `
+        <tr>
+          <td><span style="font-family:var(--mono);font-size:12px;color:var(--muted)">${p.reference}</span></td>
+          <td>${p.name}</td>
+          <td style="font-family:var(--mono)">${p.price} ${p.currency || 'EUR'}</td>
+          <td>${stockBadge(p.stock)}</td>
+          <td><span class="chip">${p.type || '—'}</span></td>
+        </tr>
+      `).join('');
+            } catch (e) {
+                toast('Erreur chargement dashboard: ' + e.message, 'error');
+            }
+
+            // Try to load users count
+            try {
+                const users = await api('/users');
+                allUsers = users;
+                document.getElementById('stat-users').textContent = users.length;
+            } catch (e) {
+                document.getElementById('stat-users').textContent = '—';
+            }
+        }
+
+        // ── PRODUCTS ───────────────────────────────────────────
+        async function loadProducts() {
+            const tbody = document.getElementById('products-table');
+            tbody.innerHTML = '<tr class="loading-row"><td colspan="8">Chargement...</td></tr>';
+            try {
+                const products = await api('/products');
+                allProducts = products;
+                renderProducts(products);
+            } catch (e) {
+                tbody.innerHTML = `<tr class="loading-row"><td colspan="8" style="color:var(--red)">Erreur: ${e.message}</td></tr>`;
+            }
+        }
+
+        function renderProducts(products) {
+            const tbody = document.getElementById('products-table');
+            if (!products.length) {
+                tbody.innerHTML = '<tr class="loading-row"><td colspan="8">Aucun produit</td></tr>';
+                return;
+            }
+            tbody.innerHTML = products.map(p => `
+      <tr>
+        <td><span style="font-family:var(--mono);font-size:12px;color:var(--muted)">${p.reference}</span></td>
+        <td><strong>${p.name}</strong></td>
+        <td style="font-family:var(--mono)">${p.price} €</td>
+        <td>${p.discount > 0 ? `<span class="badge green">-${p.discount}%</span>` : '<span style="color:var(--muted)">—</span>'}</td>
+        <td>${stockBadge(p.stock)}</td>
+        <td>${p.gender || '—'}</td>
+        <td><span class="chip">${p.type || '—'}</span></td>
+        <td style="display:flex;gap:6px;padding:8px 16px;">
+          <button class="btn btn-ghost btn-sm" onclick="openEditProduct(${p.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id}, '${p.name.replace(/'/g, "\\'")}')">🗑️</button>
+        </td>
+      </tr>
+    `).join('');
+        }
+
+        function filterProducts() {
+            const q = document.getElementById('productSearch').value.toLowerCase();
+            const filtered = allProducts.filter(p =>
+                p.name.toLowerCase().includes(q) ||
+                p.reference.toLowerCase().includes(q) ||
+                (p.type && p.type.toLowerCase().includes(q))
+            );
+            renderProducts(filtered);
+        }
+
+        function stockBadge(stock) {
+            if (stock <= 0) return `<span class="badge red">${stock}</span>`;
+            if (stock <= 5) return `<span style="color:var(--yellow);font-family:var(--mono)">${stock}</span>`;
+            return `<span style="font-family:var(--mono)">${stock}</span>`;
+        }
+
+        function openAddProduct() {
+            editingProductId = null;
+            document.getElementById('modalTitle').textContent = 'Ajouter un produit';
+            ['reference', 'name', 'description', 'price', 'discount', 'stock', 'type', 'colors', 'sizes', 'images'].forEach(f => document.getElementById('f-' + f).value = '');
+            document.getElementById('f-currency').value = 'EUR';
+            document.getElementById('f-gender').value = '';
+            document.getElementById('productModal').classList.add('open');
+        }
+
+        async function openEditProduct(id) {
+            editingProductId = id;
+            document.getElementById('modalTitle').textContent = 'Modifier le produit';
+            try {
+                const p = await api(`/products/${id}`);
+                document.getElementById('f-reference').value = p.reference || '';
+                document.getElementById('f-name').value = p.name || '';
+                document.getElementById('f-description').value = p.description || '';
+                document.getElementById('f-price').value = p.price || '';
+                document.getElementById('f-discount').value = p.discount || 0;
+                document.getElementById('f-stock').value = p.stock || '';
+                document.getElementById('f-currency').value = p.currency || 'EUR';
+                document.getElementById('f-gender').value = p.gender || '';
+                document.getElementById('f-type').value = p.type || '';
+                document.getElementById('f-colors').value = (p.colors || []).join(', ');
+                document.getElementById('f-sizes').value = (p.sizes || []).join(', ');
+                document.getElementById('f-images').value = (p.images || []).map(i => i.image_url || i).join(', ');
+                document.getElementById('productModal').classList.add('open');
+            } catch (e) {
+                toast('Erreur: ' + e.message, 'error');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('open');
+        }
+
+        async function submitProduct() {
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<span class="spinner"></span>';
+            btn.disabled = true;
+
+            const body = {
+                reference: document.getElementById('f-reference').value.trim(),
+                name: document.getElementById('f-name').value.trim(),
+                description: document.getElementById('f-description').value.trim(),
+                price: parseFloat(document.getElementById('f-price').value),
+                discount: parseInt(document.getElementById('f-discount').value) || 0,
+                stock: parseInt(document.getElementById('f-stock').value),
+                currency: document.getElementById('f-currency').value.trim() || 'EUR',
+                gender: document.getElementById('f-gender').value,
+                type: document.getElementById('f-type').value.trim(),
+                colors: document.getElementById('f-colors').value.split(',').map(s => s.trim()).filter(Boolean),
+                sizes: document.getElementById('f-sizes').value.split(',').map(s => s.trim()).filter(Boolean),
+                images: document.getElementById('f-images').value.split(',').map(s => s.trim()).filter(Boolean),
+            };
+
+            try {
+                if (editingProductId) {
+                    await api(`/products/${editingProductId}`, 'PUT', body);
+                    toast('Produit mis à jour ✅', 'success');
+                } else {
+                    await api('/products', 'POST', body);
+                    toast('Produit ajouté ✅', 'success');
+                }
+                closeModal();
+                loadProducts();
+            } catch (e) {
+                toast('Erreur: ' + e.message, 'error');
+            }
+
+            btn.innerHTML = 'Sauvegarder';
+            btn.disabled = false;
+        }
+
+        async function deleteProduct(id, name) {
+            if (!confirm(`Supprimer "${name}" ?`)) return;
+            try {
+                await api(`/products/${id}`, 'DELETE');
+                toast('Produit supprimé 🗑️', 'success');
+                loadProducts();
+            } catch (e) {
+                toast('Erreur: ' + e.message, 'error');
+            }
+        }
+
+        // ── USERS ──────────────────────────────────────────────
+        async function loadUsers() {
+            const tbody = document.getElementById('users-table');
+            tbody.innerHTML = '<tr class="loading-row"><td colspan="4">Chargement...</td></tr>';
+            try {
+                // Try admin endpoint
+                const users = await api('/users');
+                allUsers = users;
+                renderUsers(users);
+            } catch (e) {
+                tbody.innerHTML = `<tr class="loading-row"><td colspan="4" style="color:var(--muted)">Endpoint /users non disponible (route admin requise)</td></tr>`;
+            }
+        }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('users-table');
+            if (!users.length) {
+                tbody.innerHTML = '<tr class="loading-row"><td colspan="4">Aucun utilisateur</td></tr>';
+                return;
+            }
+            tbody.innerHTML = users.map(u => `
+      <tr>
+        <td style="font-family:var(--mono);color:var(--muted)">#${u.id}</td>
+        <td>${u.email}</td>
+        <td><span class="badge ${u.role === 'admin' ? 'green' : ''}" style="${u.role !== 'admin' ? 'background:var(--surface2);color:var(--muted)' : ''}">${u.role}</span></td>
+        <td style="color:var(--muted);font-size:12.5px">${new Date(u.created_at).toLocaleDateString('fr-FR')}</td>
+      </tr>
+    `).join('');
+        }
+
+        function filterUsers() {
+            const q = document.getElementById('userSearch').value.toLowerCase();
+            const filtered = allUsers.filter(u => u.email.toLowerCase().includes(q));
+            renderUsers(filtered);
+        }
+
+        // ── ORDERS ─────────────────────────────────────────────
+        async function loadOrders() {
+            const tbody = document.getElementById('orders-table');
+            try {
+                const orders = await api('/orders');
+                if (!orders.length) {
+                    tbody.innerHTML = '<tr class="loading-row"><td colspan="5">Aucune commande</td></tr>';
+                    return;
+                }
+                const statusColors = { pending: 'var(--yellow)', paid: 'var(--green)', shipped: 'var(--accent)', delivered: 'var(--green)', cancelled: 'var(--red)' };
+                tbody.innerHTML = orders.map(o => `
+        <tr>
+          <td style="font-family:var(--mono)">#${o.id}</td>
+          <td>#${o.user_id}</td>
+          <td style="font-family:var(--mono)">${o.total_price} €</td>
+          <td><span style="color:${statusColors[o.status] || 'var(--muted)'}">${o.status}</span></td>
+          <td style="color:var(--muted);font-size:12.5px">${new Date(o.created_at).toLocaleDateString('fr-FR')}</td>
+        </tr>
+      `).join('');
+            } catch (e) {
+                tbody.innerHTML = `<tr class="loading-row"><td colspan="5" style="color:var(--muted)">Endpoint /orders non disponible (route admin requise)</td></tr>`;
+            }
+        }
+
+        // ── TOAST ──────────────────────────────────────────────
+        function toast(msg, type = 'success') {
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> ${msg}`;
+            document.getElementById('toastContainer').appendChild(el);
+            setTimeout(() => el.remove(), 3500);
+        }
+
+        // Close modal on overlay click
+        document.getElementById('productModal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+
+</html>
