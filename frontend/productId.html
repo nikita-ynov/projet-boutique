@@ -1,56 +1,44 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Produit – ZAZA STORE</title>
-
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/layout.css" />
   <link rel="stylesheet" href="css/productId.css" />
 </head>
-
 <body>
 
-  <!-- ==================== HEADER ==================== -->
   <header class="site-header">
     <div class="container header-inner">
-
       <a href="./index.html" class="logo">
         <div class="logo-mark">Z</div>
         <span class="logo-text">ZAZA</span>
       </a>
-
       <div class="header-search">
         <span class="search-icon">🔍</span>
         <input type="text" id="search" placeholder="Rechercher une peluche…" autocomplete="off">
       </div>
-
       <nav class="header-nav">
         <a href="./index.html" class="nav-link">Accueil</a>
         <a href="./collections.html" class="nav-link">Collections</a>
-        <a href="#" class="nav-link">Nouveautés</a>
+        <a href="./collections.html" class="nav-link">Nouveautés</a>
       </nav>
-
       <div class="header-actions">
         <button class="icon-btn" title="Favoris">🤍</button>
-        <a href="#" class="icon-btn" title="Panier">
+        <button class="icon-btn" title="Panier">
           🛒
           <span class="cart-count" style="display:none">0</span>
-        </a>
+        </button>
         <button class="btn-login">Se connecter</button>
       </div>
-
       <button class="mobile-toggle">☰</button>
     </div>
   </header>
 
-  <!-- ==================== MAIN ==================== -->
   <main>
     <div class="container">
-
-      <!-- BREADCRUMB -->
       <nav class="breadcrumb">
         <a href="./index.html">Accueil</a>
         <span class="breadcrumb-sep">›</span>
@@ -59,58 +47,42 @@
         <span id="productName">Chargement…</span>
       </nav>
 
-      <!-- PRODUCT LAYOUT -->
       <div class="product-page">
-
-        <!-- LEFT: GALLERY -->
         <div class="product-gallery">
           <div class="main-image">
-            <span class="badge gallery-badge" id="productBadge" style="display:none">✨ Nouveauté</span>
+            <span class="badge gallery-badge" id="productBadge" style="display:none">🔥 Promo</span>
             <img id="mainImage" src="" alt="">
           </div>
-
-          <div class="thumbnails" id="thumbsContainer">
-            <!-- Rendered by JS -->
-          </div>
+          <div class="thumbnails" id="thumbsContainer"></div>
         </div>
 
-        <!-- RIGHT: INFO -->
         <div class="product-info">
-
-          <span class="badge" id="productBadge2" style="display:none"></span>
-
           <h1 id="productName">—</h1>
 
-          <!-- RATING -->
           <div class="product-rating">
             <span class="stars" id="starsEl">★★★★★</span>
             <span class="rating-count" id="ratingCount">(0 avis)</span>
           </div>
 
-          <!-- PRICE -->
           <div class="price-block">
             <span class="price-current" id="priceCurrentEl">—</span>
             <span class="price-old" id="priceOldEl"></span>
             <span class="price-discount" id="priceDiscountEl" style="display:none"></span>
           </div>
 
-          <!-- DESCRIPTION -->
           <p class="product-desc" id="productDesc">—</p>
           <button class="toggle-desc" id="toggleDesc">Voir plus ↓</button>
 
-          <!-- COLORS -->
           <div class="option-group">
             <h4>Couleur</h4>
             <div class="color-swatches" id="colorsEl"></div>
           </div>
 
-          <!-- SIZES -->
           <div class="option-group">
             <h4>Taille</h4>
             <div class="size-options" id="sizesEl"></div>
           </div>
 
-          <!-- QUANTITY -->
           <div class="quantity-row">
             <h4>Quantité</h4>
             <div class="quantity-control">
@@ -120,81 +92,48 @@
             </div>
           </div>
 
-          <!-- ACTIONS -->
           <div class="product-actions">
-            <button class="btn-cart" id="btnAddToCart">
-              🛒 Ajouter au panier
-            </button>
+            <button class="btn-cart" id="btnAddToCart">🛒 Ajouter au panier</button>
             <button class="btn-wishlist" id="btnWishlist" title="Ajouter aux favoris">🤍</button>
           </div>
 
-          <!-- META -->
           <div class="product-meta">
-            <div class="meta-row">
-              <span>Type</span>
-              <span id="productType">—</span>
-            </div>
-            <div class="meta-row">
-              <span>Genre</span>
-              <span id="productGender">Unisexe</span>
-            </div>
-            <div class="meta-row">
-              <span>Stock</span>
-              <span id="productStock" class="stock-available">—</span>
-            </div>
-            <div class="meta-row">
-              <span>Livraison</span>
-              <span>🚚 Gratuite dès 40€</span>
-            </div>
+            <div class="meta-row"><span>Type</span><span id="productType">—</span></div>
+            <div class="meta-row"><span>Genre</span><span id="productGender">Unisexe</span></div>
+            <div class="meta-row"><span>Stock</span><span id="productStock" class="stock-available">—</span></div>
+            <div class="meta-row"><span>Livraison</span><span>🚚 Gratuite dès 40€</span></div>
           </div>
-
         </div>
       </div>
 
-      <!-- SIMILAR PRODUCTS -->
       <section class="similar-section">
         <h2 class="section-title">Vous aimerez aussi <span>🧸</span></h2>
-        <div class="products" id="similarGrid">
-          <!-- Rendered by JS -->
-        </div>
+        <div class="products" id="similarGrid"></div>
       </section>
-
     </div>
   </main>
 
-  <!-- ==================== FOOTER ==================== -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <div class="logo">
-            <div class="logo-mark">Z</div>
-            <span class="logo-text">ZAZA</span>
-          </div>
+          <div class="logo"><div class="logo-mark">Z</div><span class="logo-text">ZAZA</span></div>
           <p>Des peluches premium, douces et fabriquées avec amour.</p>
           <div class="footer-socials">
-            <a href="#" class="social-link">📷</a>
-            <a href="#" class="social-link">🎵</a>
-            <a href="#" class="social-link">🐦</a>
+            <a href="#" class="social-link">📷</a><a href="#" class="social-link">🎵</a><a href="#" class="social-link">🐦</a>
           </div>
         </div>
         <div class="footer-col">
           <h5>Boutique</h5>
-          <a href="./collections.html">Collections</a>
-          <a href="#">Nouveautés</a>
-          <a href="#">Promotions</a>
+          <a href="./collections.html">Collections</a><a href="#">Nouveautés</a><a href="#">Promotions</a>
         </div>
         <div class="footer-col">
           <h5>Aide</h5>
-          <a href="#">Contact</a>
-          <a href="#">Livraison</a>
-          <a href="#">FAQ</a>
+          <a href="#">Contact</a><a href="#">Livraison</a><a href="#">FAQ</a>
         </div>
         <div class="footer-col">
           <h5>Légal</h5>
-          <a href="#">Mentions légales</a>
-          <a href="#">Confidentialité</a>
-          <a href="#">CGV</a>
+          <a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGV</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -204,8 +143,7 @@
     </div>
   </footer>
 
-  <script src="./js/script.js"></script>
+  <script src="./js/api.js"></script>
   <script src="./js/product.js"></script>
-
 </body>
 </html>
