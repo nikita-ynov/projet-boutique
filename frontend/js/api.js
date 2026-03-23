@@ -237,7 +237,7 @@ function createCartDrawer() {
     <div class="cart-items" id="cart-items-list"></div>
     <div class="cart-footer" id="cart-footer" style="display:none">
       <div class="cart-total"><span>Total</span><span id="cart-total-price">0.00 €</span></div>
-      <button class="cart-checkout-btn">✅ Passer la commande</button>
+      <button class="cart-checkout-btn" onclick="showCheckoutModal()">✅ Passer la commande</button>
       <button class="cart-clear-btn" onclick="clearCartAction()">🗑️ Vider le panier</button>
     </div>
   `;
@@ -281,7 +281,7 @@ async function renderCartItems() {
       total += parseFloat(lineTotal);
       return `
         <div class="cart-item" data-pid="${item.product_id}">
-          <img src="https://images.unsplash.com/photo-1559181567-c3190ca9d222?w=150&q=70" alt="${item.name}">
+          <img src="${item.image_url || 'https://images.unsplash.com/photo-1559181567-c3190ca9d222?w=150&q=70'}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1559181567-c3190ca9d222?w=150&q=70'">
           <div class="cart-item-info">
             <div class="cart-item-name">${item.name}</div>
             <div class="cart-item-price">${fp} ${item.discount ? `<s style="color:var(--text-muted);font-size:.8rem">${parseFloat(item.price).toFixed(2)}</s>` : ''} €</div>
@@ -683,3 +683,244 @@ function renderSearchDropdown(results, query) {
 function closeSearchDropdown() {
   document.getElementById('search-dropdown')?.remove();
 }
+
+// ══════════════════════════════════════════════
+//  ADRESSE DE LIVRAISON (localStorage)
+// ══════════════════════════════════════════════
+const AddressStore = {
+  get()       { try { return JSON.parse(localStorage.getItem('zaza_address')) || null; } catch { return null; } },
+  save(addr)  { localStorage.setItem('zaza_address', JSON.stringify(addr)); },
+  clear()     { localStorage.removeItem('zaza_address'); },
+};
+
+// ══════════════════════════════════════════════
+//  MODAL COMMANDE (adresse + confirmation)
+// ══════════════════════════════════════════════
+async function showCheckoutModal() {
+  if (document.getElementById('checkout-modal')) return;
+
+  let cartItems = [];
+  try { cartItems = await CartAPI.get(); } catch {}
+  if (!cartItems.length) { showToast('Votre panier est vide', 'error'); return; }
+
+  const total = cartItems.reduce((s, i) => s + parseFloat(calcFinalPrice(i.price, i.discount)) * i.quantity, 0);
+  const saved = AddressStore.get();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'checkout-modal';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:1100;backdrop-filter:blur(4px);';
+
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:32px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;">
+      <h2 style="font-family:var(--font-display);font-size:1.5rem;margin-bottom:6px;">📦 Finaliser la commande</h2>
+      <p style="color:var(--text-secondary);font-size:.88rem;margin-bottom:24px;">Total : <strong style="color:var(--text-primary)">${total.toFixed(2)} €</strong> · ${cartItems.reduce((s,i)=>s+i.quantity,0)} article(s)</p>
+
+      <h4 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-secondary);margin-bottom:12px;">Adresse de livraison</h4>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <label style="font-size:.75rem;color:var(--text-muted);display:block;margin-bottom:4px;">Prénom</label>
+            <input id="addr-firstname" value="${saved?.firstname||''}" placeholder="Jean" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text-primary);font-size:.9rem;width:100%;">
+          </div>
+          <div>
+            <label style="font-size:.75rem;color:var(--text-muted);display:block;margin-bottom:4px;">Nom</label>
+            <input id="addr-lastname" value="${saved?.lastname||''}" placeholder="Dupont" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text-primary);font-size:.9rem;width:100%;">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:.75rem;color:var(--text-muted);display:block;margin-bottom:4px;">Adresse</label>
+          <input id="addr-street" value="${saved?.street||''}" placeholder="12 rue de la Paix" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text-primary);font-size:.9rem;width:100%;">
+        </div>
+        <div style="display:grid;grid-template-columns:120px 1fr;gap:10px;">
+          <div>
+            <label style="font-size:.75rem;color:var(--text-muted);display:block;margin-bottom:4px;">Code postal</label>
+            <input id="addr-zip" value="${saved?.zip||''}" placeholder="75001" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text-primary);font-size:.9rem;width:100%;">
+          </div>
+          <div>
+            <label style="font-size:.75rem;color:var(--text-muted);display:block;margin-bottom:4px;">Ville</label>
+            <input id="addr-city" value="${saved?.city||''}" placeholder="Paris" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text-primary);font-size:.9rem;width:100%;">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:.75rem;color:var(--text-muted);display:block;margin-bottom:4px;">Pays</label>
+          <input id="addr-country" value="${saved?.country||'France'}" placeholder="France" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text-primary);font-size:.9rem;width:100%;">
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text-secondary);cursor:pointer;margin-top:4px;">
+          <input type="checkbox" id="addr-save" checked style="accent-color:var(--accent);">
+          Retenir cette adresse pour la prochaine fois
+        </label>
+      </div>
+
+      <div id="checkout-error" style="color:var(--accent);font-size:.83rem;display:none;padding:8px 12px;background:var(--accent-soft);border-radius:6px;margin-top:14px;"></div>
+
+      <div style="display:flex;gap:10px;margin-top:24px;">
+        <button onclick="closeCheckoutModal()" style="flex:1;background:none;border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text-secondary);cursor:pointer;font-size:.9rem;">Annuler</button>
+        <button onclick="submitCheckout()" id="checkout-submit" style="flex:2;background:var(--accent);color:white;border:none;border-radius:8px;padding:12px;font-size:.95rem;font-weight:600;cursor:pointer;">Confirmer la commande →</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeCheckoutModal(); });
+}
+
+function closeCheckoutModal() {
+  document.getElementById('checkout-modal')?.remove();
+}
+
+async function submitCheckout() {
+  const firstname = document.getElementById('addr-firstname')?.value.trim();
+  const lastname  = document.getElementById('addr-lastname')?.value.trim();
+  const street    = document.getElementById('addr-street')?.value.trim();
+  const zip       = document.getElementById('addr-zip')?.value.trim();
+  const city      = document.getElementById('addr-city')?.value.trim();
+  const country   = document.getElementById('addr-country')?.value.trim();
+  const saveAddr  = document.getElementById('addr-save')?.checked;
+  const errEl     = document.getElementById('checkout-error');
+  const submitBtn = document.getElementById('checkout-submit');
+
+  if (!firstname || !lastname || !street || !zip || !city) {
+    errEl.textContent = 'Veuillez remplir tous les champs obligatoires.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const address = { firstname, lastname, street, zip, city, country };
+  if (saveAddr) AddressStore.save(address);
+
+  submitBtn.textContent = '⏳ Traitement…';
+  submitBtn.disabled = true;
+
+  try {
+    // Vider le panier (la commande est passée)
+    await CartAPI.clear();
+    closeCheckoutModal();
+    closeCart();
+    await updateCartCount();
+    showOrderSuccess(address);
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+    submitBtn.textContent = 'Confirmer la commande →';
+    submitBtn.disabled = false;
+  }
+}
+
+function showOrderSuccess(address) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:1200;backdrop-filter:blur(4px);';
+  overlay.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:40px;width:420px;max-width:95vw;text-align:center;">
+      <div style="font-size:4rem;margin-bottom:16px;">🎉</div>
+      <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:10px;">Commande confirmée !</h2>
+      <p style="color:var(--text-secondary);font-size:.9rem;line-height:1.7;">
+        Merci pour votre commande.<br>
+        Livraison prévue à :<br>
+        <strong style="color:var(--text-primary)">${address.firstname} ${address.lastname}<br>
+        ${address.street}, ${address.zip} ${address.city}, ${address.country}</strong>
+      </p>
+      <button onclick="this.closest('div[style]').remove()" style="margin-top:24px;background:var(--accent);color:white;border:none;border-radius:8px;padding:12px 28px;font-size:.95rem;font-weight:600;cursor:pointer;">
+        Continuer les achats
+      </button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// ══════════════════════════════════════════════
+//  PAGE FAVORIS
+// ══════════════════════════════════════════════
+async function renderFavoritesPage() {
+  const container = document.getElementById('favorites-grid');
+  if (!container) return;
+
+  if (!Auth.isLoggedIn()) {
+    container.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:4rem 0;color:var(--text-secondary)">
+        <div style="font-size:3rem;margin-bottom:1rem">🔒</div>
+        <h3>Connectez-vous pour voir vos favoris</h3>
+        <button onclick="showAuthModal()" class="btn" style="margin-top:1.5rem">Se connecter</button>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem 0;color:var(--text-secondary)"><div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem;"></div><p>Chargement…</p></div>';
+
+  try {
+    const favs = await FavoritesAPI.get();
+    const countEl = document.getElementById('favorites-count');
+    if (countEl) countEl.textContent = `${favs.length} produit${favs.length !== 1 ? 's' : ''}`;
+
+    if (!favs.length) {
+      container.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:4rem 0;color:var(--text-secondary)">
+          <div style="font-size:3rem;margin-bottom:1rem">🤍</div>
+          <h3>Aucun favori pour l'instant</h3>
+          <p style="margin-top:.5rem">Explorez notre catalogue et ajoutez des produits à vos favoris.</p>
+          <a href="./collections.html" class="btn" style="margin-top:1.5rem;display:inline-flex">🧸 Découvrir les produits</a>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = favs.map(p => {
+      const images = getProductImages(p);
+      const img1 = images[0] || 'https://images.unsplash.com/photo-1559181567-c3190ca9d222?w=400&q=80';
+      const img2 = images[1] || img1;
+      const fp   = calcFinalPrice(p.price, p.discount);
+      return `
+        <div class="product-card" data-id="${p.id}" style="position:relative;">
+          <div class="product-image">
+            ${p.discount ? `<span class="discount-badge">-${p.discount}%</span>` : ''}
+            <img src="${img1}" alt="${p.name}" class="first" loading="lazy">
+            <img src="${img2}" alt="${p.name}" class="second" loading="lazy">
+            <button class="wishlist-btn active-fav" data-id="${p.id}" title="Retirer des favoris" style="opacity:1;">❤️</button>
+          </div>
+          <div class="product-info">
+            <div class="product-name">${p.name}</div>
+            <div class="product-price">
+              <span>${fp} ${p.currency || 'EUR'}</span>
+              ${p.discount ? `<span class="old-price">${parseFloat(p.price).toFixed(2)} €</span>` : ''}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Clics sur les cartes
+    container.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('click', e => {
+        if (e.target.closest('.wishlist-btn')) return;
+        window.location.href = `./productId.html?id=${card.dataset.id}`;
+      });
+    });
+
+    // Retirer des favoris
+    container.querySelectorAll('.wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        e.stopPropagation();
+        const id = +btn.dataset.id;
+        try {
+          await FavoritesAPI.remove(id);
+          btn.closest('.product-card').style.animation = 'fadeOut .3s ease forwards';
+          setTimeout(() => renderFavoritesPage(), 320);
+          showToast('Retiré des favoris');
+        } catch (err) { showToast(err.message, 'error'); }
+      });
+    });
+
+  } catch (e) {
+    container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--accent)">Erreur : ${e.message}</div>`;
+  }
+}
+
+// Auto-init favorites page
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('favorites-grid')) renderFavoritesPage();
+
+  // Injecter fadeOut animation si pas déjà là
+  if (!document.getElementById('fadeout-style')) {
+    const s = document.createElement('style');
+    s.id = 'fadeout-style';
+    s.textContent = '@keyframes fadeOut{to{opacity:0;transform:scale(.95)}}';
+    document.head.appendChild(s);
+  }
+});

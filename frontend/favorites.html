@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mes Favoris – ZAZA STORE</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <style>
+    .favorites-hero {
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .favorites-hero h1 {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 700;
+    }
+    .favorites-hero h1 span { color: var(--accent); font-style: italic; }
+    #favorites-count {
+      font-size: .9rem;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      padding: .4rem 1rem;
+      border-radius: 2rem;
+    }
+    .favorites-empty {
+      text-align: center;
+      padding: 5rem 0;
+    }
+    .active-fav { opacity: 1 !important; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="./index.html" class="logo">
+        <div class="logo-mark">Z</div>
+        <span class="logo-text">ZAZA</span>
+      </a>
+      <div class="header-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search" placeholder="Rechercher une peluche…" autocomplete="off">
+      </div>
+      <nav class="header-nav">
+        <a href="./index.html" class="nav-link">Accueil</a>
+        <a href="./collections.html" class="nav-link">Collections</a>
+        <a href="./favorites.html" class="nav-link active">Favoris</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" title="Favoris" style="color:var(--accent);border-color:var(--accent);">❤️</button>
+        <button class="icon-btn" title="Panier">
+          🛒
+          <span class="cart-count" style="display:none">0</span>
+        </button>
+        <button class="btn-login">Se connecter</button>
+      </div>
+      <button class="mobile-toggle">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="favorites-hero">
+        <h1>Mes <span>Favoris</span> ❤️</h1>
+        <span id="favorites-count"></span>
+      </div>
+
+      <div class="products" id="favorites-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo"><div class="logo-mark">Z</div><span class="logo-text">ZAZA</span></div>
+          <p>Des peluches premium, douces et fabriquées avec amour.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-link">📷</a>
+            <a href="#" class="social-link">🎵</a>
+            <a href="#" class="social-link">🐦</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Boutique</h5>
+          <a href="./collections.html">Collections</a>
+          <a href="#">Nouveautés</a>
+          <a href="#">Promotions</a>
+        </div>
+        <div class="footer-col">
+          <h5>Aide</h5>
+          <a href="#">Contact</a>
+          <a href="#">Livraison</a>
+          <a href="#">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h5>Légal</h5>
+          <a href="#">Mentions légales</a>
+          <a href="#">Confidentialité</a>
+          <a href="#">CGV</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 ZAZA STORE. Tous droits réservés.</span>
+        <span>Fait avec ❤️ en France</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./js/api.js"></script>
+</body>
+</html>
