@@ -10,6 +10,8 @@
   margin-top: 2rem;
   overflow: hidden;
   background: var(--bg-elevated);
+  background: url("/assets/images/bg.png");
+  background-size: 100%;
 }
 
 .hero-bg {
@@ -253,11 +255,13 @@
   grid-template-columns: 1fr 1fr;
   min-height: 480px;
   border: 1px solid var(--border);
+  padding-left: 0;
 }
 
 .about-image {
-  background: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80') center/cover no-repeat;
+  background: url('/assets/images/girl.png') center/cover no-repeat;
   min-height: 300px;
+  block-size: 100%;
 }
 
 .about-content {
