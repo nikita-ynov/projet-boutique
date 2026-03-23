@@ -20,52 +20,6 @@ exports.createOrder = async (req, res) => {
     const [addrResult] = await connection.query(
       `INSERT INTO addresses (user_id, firstname, lastname, street, zip, city, country)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [userId, address.firstname, address.lastname, address.street,
-       address.zip, address.city, address.country || 'France']
-    );
-    const addressId = addrResult.insertId;
-
-    // 2. Récupérer le panier
-    const [carts] = await connection.query(
-      'SELECT id FROM carts WHERE user_id = ?', [userId]
-    );
-    if (!carts.length) throw new Error('Panier introuvable');
-    const cartId = carts[0].id;
-
-    const [items] = await connection.query(
-      `SELECT ci.product_id, ci.quantity, p.price, p.discount, p.stock, p.name
-       FROM cart_items ci
-       JOIN products p ON ci.product_id = p.id
-       WHERE ci.cart_id = ?`,
-      [cartId]
-    );
-
-    if (!items.length) throw new Error('Le panier est vide');
-
-    // 3. Vérifier le stock et calculer le total
-    for (const item of items) {
-      if (item.quantity > item.stock) {
-        throw new Error(`Stock insuffisant pour "${item.name}" (${item.stock} disponibles)`);
-      }
-    }
-
-exports.createOrder = async (req, res) => {
-  const userId = req.user.id;
-  const { address } = req.body;
-
-  if (!address || !address.firstname || !address.street || !address.city || !address.zip) {
-    return res.status(400).json({ message: 'Adresse de livraison incomplète' });
-  }
-
-  const connection = await db.getConnection();
-
-  try {
-    await connection.beginTransaction();
-
-    // 1. Sauvegarder l'adresse
-    const [addrResult] = await connection.query(
-      `INSERT INTO addresses (user_id, firstname, lastname, street, zip, city, country)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
         address.firstname,
@@ -174,71 +128,6 @@ exports.createOrder = async (req, res) => {
 };
 
 
-    const orderId = orderResult.insertId;
-
-    // 6. Créer les order_items + décrémenter le stock
-    for (const item of items) {
-      const price = Number(item.price);
-      const discount = Number(item.discount || 0);
-
-      const finalPrice = discount > 0
-        ? price * (1 - discount / 100)
-        : price;
-
-      await connection.query(
-        `INSERT INTO order_items (order_id, product_id, quantity, unit_price)
-         VALUES (?, ?, ?, ?)`,
-        [orderId, item.product_id, item.quantity, finalPrice.toFixed(2)]
-      );
-
-      await connection.query(
-        'UPDATE products SET stock = stock - ? WHERE id = ?',
-        [item.quantity, item.product_id]
-      );
-    }
-
-    // 7. Vider le panier
-    await connection.query(
-      'DELETE FROM cart_items WHERE cart_id = ?',
-      [cartId]
-    );
-
-    await connection.commit();
-    connection.release();
-
-    res.status(201).json({
-      message: 'Commande créée avec succès ✅',
-      orderId,
-      totalPrice: totalPrice.toFixed(2)
-    });
-
-  } catch (error) {
-    await connection.rollback();
-    connection.release();
-    res.status(500).json({ error: error.message });
-  }
-};
-
-
-    // 6. Vider le panier
-    await connection.query('DELETE FROM cart_items WHERE cart_id = ?', [cartId]);
-
-    await connection.commit();
-    connection.release();
-
-    res.status(201).json({
-      message: 'Commande créée avec succès ✅',
-      orderId,
-      totalPrice: totalPrice.toFixed(2)
-    });
-
-  } catch (error) {
-    await connection.rollback();
-    connection.release();
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // ── GET USER ORDERS ─────────────────────────────────────────
 exports.getUserOrders = async (req, res) => {
   try {
@@ -256,13 +145,17 @@ exports.getUserOrders = async (req, res) => {
 
     // Ajouter les items pour chaque commande
     for (const order of orders) {
+      
       const [items] = await db.query(
-        `SELECT oi.quantity, oi.unit_price, p.name, p.id as product_id
-         FROM order_items oi
-         JOIN products p ON oi.product_id = p.id
-         WHERE oi.order_id = ?`,
+        `SELECT oi.quantity, oi.unit_price, p.name, p.id as product_id,
+                pi.image_url
+        FROM order_items oi
+        JOIN products p ON oi.product_id = p.id
+        LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_main = 1
+        WHERE oi.order_id = ?`,
         [order.id]
       );
+
       order.items = items;
     }
 
