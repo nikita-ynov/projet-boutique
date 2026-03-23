@@ -785,19 +785,19 @@ async function submitCheckout() {
     return;
   }
 
-  const address = { firstname, lastname, street, zip, city, country };
+  const address = { firstname, lastname, street, zip, city, country: country || 'France' };
   if (saveAddr) AddressStore.save(address);
 
   submitBtn.textContent = '⏳ Traitement…';
   submitBtn.disabled = true;
 
   try {
-    // Vider le panier (la commande est passée)
-    await CartAPI.clear();
+    // Appel API — crée la commande, décrémente le stock, vide le panier
+    const result = await OrdersAPI.create(address);
     closeCheckoutModal();
     closeCart();
     await updateCartCount();
-    showOrderSuccess(address);
+    showOrderSuccess(address, result.orderId, result.totalPrice);
   } catch (e) {
     errEl.textContent = e.message;
     errEl.style.display = 'block';
@@ -806,22 +806,26 @@ async function submitCheckout() {
   }
 }
 
-function showOrderSuccess(address) {
+function showOrderSuccess(address, orderId, totalPrice) {
   const overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:1200;backdrop-filter:blur(4px);';
   overlay.innerHTML = `
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:40px;width:420px;max-width:95vw;text-align:center;">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:40px;width:440px;max-width:95vw;text-align:center;">
       <div style="font-size:4rem;margin-bottom:16px;">🎉</div>
       <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:10px;">Commande confirmée !</h2>
-      <p style="color:var(--text-secondary);font-size:.9rem;line-height:1.7;">
-        Merci pour votre commande.<br>
+      ${orderId ? `<p style="color:var(--text-muted);font-size:.8rem;margin-bottom:10px;">Commande #${orderId}</p>` : ''}
+      <p style="color:var(--text-secondary);font-size:.9rem;line-height:1.8;">
+        ${totalPrice ? `<strong style="color:var(--text-primary)">Total : ${parseFloat(totalPrice).toFixed(2)} €</strong><br>` : ''}
         Livraison prévue à :<br>
         <strong style="color:var(--text-primary)">${address.firstname} ${address.lastname}<br>
         ${address.street}, ${address.zip} ${address.city}, ${address.country}</strong>
       </p>
-      <button onclick="this.closest('div[style]').remove()" style="margin-top:24px;background:var(--accent);color:white;border:none;border-radius:8px;padding:12px 28px;font-size:.95rem;font-weight:600;cursor:pointer;">
-        Continuer les achats
-      </button>
+      <div style="display:flex;gap:10px;margin-top:24px;justify-content:center;">
+        <a href="./orders.html" style="background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border);border-radius:8px;padding:11px 20px;font-size:.9rem;font-weight:500;cursor:pointer;text-decoration:none;">Voir mes commandes</a>
+        <button onclick="this.closest('div[style]').remove()" style="background:var(--accent);color:white;border:none;border-radius:8px;padding:11px 20px;font-size:.9rem;font-weight:600;cursor:pointer;">
+          Continuer les achats
+        </button>
+      </div>
     </div>
   `;
   document.body.appendChild(overlay);
@@ -924,3 +928,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(s);
   }
 });
+
+// ══════════════════════════════════════════════
+//  ORDERS API
+// ══════════════════════════════════════════════
+const OrdersAPI = {
+  // POST /orders — passer une commande
+  async create(address) {
+    return request('/orders', 'POST', { address }, true);
+  },
+  // GET /orders — mes commandes
+  async getMyOrders() {
+    return request('/orders', 'GET', null, true);
+  },
+  // GET /orders/:id
+  async getById(id) {
+    return request(`/orders/${id}`, 'GET', null, true);
+  },
+};

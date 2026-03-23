@@ -73,6 +73,19 @@ CREATE TABLE cart_items (
   FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
+CREATE TABLE addresses (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  user_id    INT NOT NULL,
+  firstname  VARCHAR(100) NOT NULL,
+  lastname   VARCHAR(100) NOT NULL,
+  street     VARCHAR(255) NOT NULL,
+  zip        VARCHAR(20)  NOT NULL,
+  city       VARCHAR(100) NOT NULL,
+  country    VARCHAR(100) NOT NULL DEFAULT 'France',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE orders (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -80,9 +93,23 @@ CREATE TABLE orders (
   total_price DECIMAL(10,2) NOT NULL,
   status ENUM('pending','paid','shipped','delivered','cancelled') DEFAULT 'pending',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (address_id) REFERENCES addresses(id)
+);
+
+CREATE TABLE order_items (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  order_id   INT NOT NULL,
+  product_id INT NOT NULL,
+  quantity   INT NOT NULL,
+  unit_price DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (order_id)   REFERENCES orders(id)   ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
 );
 
 CREATE INDEX idx_products_price ON products(price);
 CREATE INDEX idx_products_type ON products(type);
 CREATE INDEX idx_products_gender ON products(gender);
+CREATE INDEX idx_orders_user ON orders(user_id);
+CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_order_items_order ON order_items(order_id);

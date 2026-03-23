@@ -14,8 +14,9 @@ const productsRouter = require("./router/products")
 const favoritesRouter = require("./router/favorites")
 const cartRouter = require("./router/cart")
 const authRouter = require("./router/auth")
+const ordersRouter    = require("./router/orders")
 
-app.use(productsRouter, favoritesRouter, cartRouter, authRouter)
+app.use(productsRouter, favoritesRouter, cartRouter, authRouter, ordersRouter)
 
 app.get('/test-db', async (req, res) => {
   try {
@@ -33,8 +34,8 @@ app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html'))
 // ── Seed admin on startup ─────────────────────────────
 async function seedAdmin() {
   try {
-    const ADMIN_EMAIL = 'admin@boutique.fr';
-    const ADMIN_PASSWORD = 'password';
+    const ADMIN_EMAIL = '1';
+    const ADMIN_PASSWORD = '1';
 
     const [existing] = await db.query(
       "SELECT id FROM users WHERE email = ?",
