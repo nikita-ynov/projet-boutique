@@ -31,9 +31,21 @@ exports.viewCart = async (req, res) => {
 
     const [items] = await db.query(
       `
-      SELECT ci.product_id, ci.quantity, p.name, p.price, p.discount
+      SELECT 
+        ci.product_id,
+        ci.quantity,
+        p.name,
+        p.price,
+        p.discount,
+        pi.image_url
       FROM cart_items ci
       JOIN products p ON ci.product_id = p.id
+      LEFT JOIN (
+        SELECT product_id, MIN(id) AS first_image_id
+        FROM product_images
+        GROUP BY product_id
+      ) pim ON pim.product_id = p.id
+      LEFT JOIN product_images pi ON pi.id = pim.first_image_id
       WHERE ci.cart_id = ?
       `,
       [cart.id]
@@ -45,6 +57,7 @@ exports.viewCart = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 
