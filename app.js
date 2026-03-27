@@ -15,8 +15,9 @@ const favoritesRouter = require("./router/favorites")
 const cartRouter = require("./router/cart")
 const authRouter = require("./router/auth")
 const ordersRouter    = require("./router/orders")
+const usersRouter    = require("./router/users")
 
-app.use(productsRouter, favoritesRouter, cartRouter, authRouter, ordersRouter)
+app.use(productsRouter, favoritesRouter, cartRouter, authRouter, ordersRouter, usersRouter)
 
 app.get('/test-db', async (req, res) => {
   try {

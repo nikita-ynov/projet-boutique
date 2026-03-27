@@ -161,26 +161,80 @@ function populatePage(p) {
   }
 
   // ── COULEURS ──────────────────────────────────
+  // Dictionnaire nom → valeur CSS
+  const COLOR_MAP = {
+    // Français
+    rouge: '#e8341a', red: '#e8341a',
+    bleu: '#3b82f6', blue: '#3b82f6',
+    'bleu clair': '#93c5fd', 'bleu marine': '#1e3a5f', navy: '#1e3a5f',
+    vert: '#22c55e', green: '#22c55e', 'vert forêt': '#15803d',
+    jaune: '#fbbf24', yellow: '#fbbf24',
+    orange: '#f97316',
+    rose: '#f472b6', pink: '#f472b6', 'rose pâle': '#fce7f3',
+    violet: '#a855f7', purple: '#a855f7', mauve: '#c084fc',
+    noir: '#1a1a1a', black: '#1a1a1a',
+    blanc: '#f5f5f5', white: '#f5f5f5',
+    gris: '#9ca3af', grey: '#9ca3af', gray: '#9ca3af',
+    marron: '#92400e', brown: '#92400e', beige: '#d4b896',
+    crème: '#fef9c3', cream: '#fef9c3',
+    turquoise: '#2dd4bf', cyan: '#22d3ee',
+    or: '#f59e0b', gold: '#f59e0b', argent: '#cbd5e1', silver: '#cbd5e1',
+    lavande: '#c4b5fd', lavender: '#c4b5fd',
+    corail: '#fb7185', coral: '#fb7185',
+    saumon: '#fca5a5', salmon: '#fca5a5',
+  };
+
+  function resolveColor(raw) {
+    const key = raw.toLowerCase().trim();
+    // Si déjà une valeur CSS valide (#hex, rgb, hsl, nom CSS standard)
+    if (key.startsWith('#') || key.startsWith('rgb') || key.startsWith('hsl')) return raw;
+    return COLOR_MAP[key] || raw;
+  }
+
   const colorsEl   = document.getElementById('colorsEl');
   const colorsList = Array.isArray(p.colors) ? p.colors
     : (typeof p.colors === 'string' ? p.colors.split(',').map(c => c.trim()).filter(Boolean) : []);
   let selectedColor = colorsList[0] || null;
 
+  // Label qui affiche le nom de la couleur sélectionnée
+  const colorLabelEl = document.querySelector('.color-label');
+
   if (colorsEl) {
     if (colorsList.length) {
-      colorsEl.innerHTML = colorsList.map((c, i) => `
-        <button class="color-swatch ${i===0?'active':''}" style="background:${c}" data-color="${c}" title="${c}"></button>
-      `).join('');
+      colorsEl.innerHTML = colorsList.map((c, i) => {
+        const cssColor = resolveColor(c);
+        const isDark = isColorDark(cssColor);
+        return `<button
+          class="color-swatch ${i===0?'active':''}"
+          style="background:${cssColor};border-color:${isDark ? 'rgba(255,255,255,.15)' : 'rgba(0,0,0,.15)'}"
+          data-color="${c}"
+          data-css="${cssColor}"
+          title="${c}">
+        </button>`;
+      }).join('');
+
+      if (colorLabelEl) colorLabelEl.textContent = colorsList[0];
+
       colorsEl.querySelectorAll('.color-swatch').forEach(btn => {
         btn.addEventListener('click', () => {
           selectedColor = btn.dataset.color;
           colorsEl.querySelectorAll('.color-swatch').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
+          if (colorLabelEl) colorLabelEl.textContent = btn.dataset.color;
         });
       });
     } else {
       colorsEl.innerHTML = '<span style="color:var(--text-muted);font-size:.85rem">Non spécifié</span>';
     }
+  }
+
+  // Détecte si une couleur est sombre (pour adapter la bordure)
+  function isColorDark(hex) {
+    if (!hex || !hex.startsWith('#')) return false;
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return (r*299 + g*587 + b*114) / 1000 < 128;
   }
 
   // ── TAILLES ───────────────────────────────────

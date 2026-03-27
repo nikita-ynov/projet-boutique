@@ -414,3 +414,39 @@
   .product-actions { flex-direction: column; }
   .btn-wishlist { width: 100%; }
 }
+
+/* ── FIX COULEURS ── */
+.color-swatches {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+
+.color-swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid rgba(0,0,0,.12);
+  transition: var(--transition);
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+}
+
+.color-swatch::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+
+.color-swatch.active::after { border-color: var(--accent); }
+.color-swatch:hover::after  { border-color: rgba(232,52,26,.5); }
+
+.color-swatch.active {
+  box-shadow: 0 0 0 3px var(--bg-card), 0 0 0 5px var(--accent);
+}
