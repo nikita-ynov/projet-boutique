@@ -260,3 +260,33 @@
   .footer-bottom { flex-direction: column; gap: .5rem; text-align: center; }
   .container { padding: 0 1.2rem; }
 }
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 1rem 0;
+}
+
+.mobile-nav.open { display: flex; }
+
+.mobile-nav .nav-link {
+  padding: .9rem 1.5rem;
+  font-size: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.mobile-nav .header-search {
+  display: block;
+  padding: .75rem 1.5rem;
+}
+
+.mobile-nav .header-search input { max-width: 100%; }
+
+@media (max-width: 768px) {
+  .header-inner { height: 60px; }
+  .header-actions { gap: .5rem; }
+  .btn-login { padding: .45rem .9rem; font-size: .8rem; }
+}

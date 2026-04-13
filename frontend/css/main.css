@@ -282,3 +282,15 @@ img { display: block; }
   color: var(--accent);
   font-style: italic;
 }
+
+@media (max-width: 768px) {
+  .section-title { font-size: 1.6rem; }
+  .products { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .btn { padding: .75rem 1.3rem; font-size: .88rem; }
+}
+
+@media (max-width: 480px) {
+  .products { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+  .product-info { padding: .85rem 1rem; }
+  .product-name { font-size: .85rem; }
+}

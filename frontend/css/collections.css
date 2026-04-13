@@ -119,3 +119,11 @@
   .filters-bar { flex-direction: column; align-items: flex-start; }
   .collections-hero h1 { font-size: 2rem; }
 }
+
+@media (max-width: 480px) {
+  .filters-left { gap: .4rem; }
+  .filter-chip { padding: .4rem .75rem; font-size: .78rem; }
+  .collections-hero { padding: 1.5rem 0 1rem; }
+  .collections-hero h1 { font-size: 1.6rem; }
+  .results-count { font-size: .78rem; }
+}
