@@ -30,7 +30,7 @@ app.get('/test-db', async (req, res) => {
 
 const path = require('path');
 app.use(express.static(__dirname)); 
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
 // ── Seed admin on startup ─────────────────────────────
 async function seedAdmin() {
