@@ -296,11 +296,32 @@ exports.deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await db.query(`DELETE FROM products WHERE id = ?`, [id]);
+    // 🔍 Check if product is used in any order
+    const [rows] = await db.query(
+      "SELECT COUNT(*) as count FROM order_items WHERE product_id = ?",
+      [id]
+    );
+
+    if (rows[0].count > 0) {
+      return res.status(400).json({
+        error: "Impossible de supprimer : produit déjà utilisé dans une commande"
+      });
+    }
+
+    // ✅ Safe to delete
+    const [result] = await db.query(
+      "DELETE FROM products WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Produit introuvable" });
+    }
 
     res.json({ message: "Produit supprimé 🗑️" });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
